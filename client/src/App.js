@@ -49,6 +49,24 @@ const customers = [
 ];
 
 class App extends Component {
+
+  state={
+    customers: ""
+  }
+
+  //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  componentDidMount(){
+    this.callApi()
+      .then(res => this.setState({customers:res}))
+      .catch(err => console.log(err));
+  }
+
+  callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -65,20 +83,12 @@ class App extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map((c) => {
+            {this.state.customers ? this.state.customers.map((c) => {
               // function item(c){
               return (
-                <Customer
-                  key={c.id}
-                  id={c.id}
-                  image={c.image}
-                  name={c.name}
-                  birthday={c.gender}
-                  gender={c.gender}
-                  job={c.job}
-                ></Customer>
+                <Customer key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.gender} gender={c.gender} job={c.job}></Customer>
               );
-            })}
+            }) : ""}
           </TableBody>
         </Table>
       </Paper>
